@@ -32,6 +32,43 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $('#formSorteo').on('submit', function (e) {
+            e.preventDefault();
+            const $form = $(this);
+
+            $.ajax({
+                url: $form.attr('action'),
+                method: 'POST',
+                data: $form.serialize(),
+                dataType: 'json',
+                success: function (resp) {
+                    // actualiza el token CSRF en todos los formularios de la página
+                    if (resp.token) {
+                        $('input[name="<?= csrf_token() ?>"]').val(resp.token);
+                    }
+
+                    const $lista = $('#resultadoSorteo').empty();
+
+                    if (!resp.ok) {
+                        $('#msgSorteo').text(resp.mensaje).css('color', 'red');
+                        return;
+                    }
+
+                    $('#msgSorteo').text('Preguntas sorteadas:').css('color', 'green');
+                    resp.preguntas.forEach(function (texto) {
+                        $lista.append($('<li>').text(texto));
+                    });
+                },
+                error: function () {
+                    $('#msgSorteo').text('Error de comunicación con el servidor.').css('color', 'red');
+                }
+            });
+        });
+    });
+</script>
 <?php endif; ?>
 
 <script src="<?= base_url('vendor/js/jquery.min.js') ?>"></script>

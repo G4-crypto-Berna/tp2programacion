@@ -62,4 +62,47 @@ class Preguntas extends BaseController
 
         return redirect()->to(base_url('examenes'));
     }
+
+    public function sortear($idExamen)
+    {
+        if (!$this->sesion->get('id')) {
+            return $this->response->setStatusCode(401)
+                ->setJSON(['ok' => false, 'mensaje' => 'Sesión vencida.']);
+        }
+
+        if (!$this->esMio($idExamen)) {
+            return $this->response->setStatusCode(403)
+                ->setJSON(['ok' => false, 'mensaje' => 'Examen no válido.']);
+        }
+
+        $cantidad = (int) $this->request->getPost('cantidad');
+        $total    = $this->preguntas->where('idExamen', $idExamen)->countAllResults();
+
+        if ($cantidad < 1) {
+            return $this->response->setJSON([
+                'ok' => false, 'mensaje' => 'Indicá un número mayor a 0.', 'token' => csrf_hash(),
+            ]);
+        }
+
+        if ($cantidad > $total) {
+            return $this->response->setJSON([
+                'ok' => false,
+                'mensaje' => "El examen tiene solo $total pregunta(s). Elegí un número menor o igual.",
+                'token' => csrf_hash(),
+            ]);
+        }
+
+        // Cada fila aparece una sola vez, por lo tanto no se repiten preguntas
+        $sorteadas = $this->preguntas
+            ->where('idExamen', $idExamen)
+            ->orderBy('id', 'RANDOM')
+            ->limit($cantidad)
+            ->findAll();
+
+        return $this->response->setJSON([
+            'ok'        => true,
+            'preguntas' => array_column($sorteadas, 'textoPregunta'),
+            'token'     => csrf_hash(),
+        ]);
+    }
 }
