@@ -17,7 +17,7 @@ $routes->get('/examenes/nuevo', 'Examenes::nuevo');
 $routes->post('/examenes/insertar', 'Examenes::insertar');
 $routes->get('/examenes/editar/(:num)', 'Examenes::editar/$1');
 $routes->post('/examenes/actualizar/(:num)', 'Examenes::actualizar/$1');
-$routes->post('/examenes/borrar/(:num)', 'Examenes::borrar/$1');
+$routes->get('/examenes/borrar/(:num)', 'Examenes::borrar/$1');
 $routes->get('/examenes/ver/(:num)', 'Examenes::ver/$1');
 
 $routes->post('/preguntas/insertar/(:num)', 'Preguntas::insertar/$1');

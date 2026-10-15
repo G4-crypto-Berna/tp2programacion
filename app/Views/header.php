@@ -10,13 +10,13 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <link href="<?= base_url('vendor/css/sb-admin-2.min.css') ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('vendor/css/logincss/login.css') ?>">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
 </head>
 <body id="page-top">
 
 <?php if ($logueado): ?>
 <div id="wrapper">
 
-    <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('examenes') ?>">
             <div class="sidebar-brand-icon"><i class="fas fa-file-alt"></i></div>
@@ -40,12 +40,10 @@
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
     </ul>
-    <!-- End Sidebar -->
 
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
 
-            <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
@@ -65,12 +63,10 @@
                     </li>
                 </ul>
             </nav>
-            <!-- End Topbar -->
 
             <div class="container-fluid">
 <?php endif; ?>
 
-                <!-- Mensajes flash -->
                 <div class="container mt-3">
                     <?php if (session()->getFlashdata('ok')): ?>
                         <div class="alert alert-success"><?= esc(session()->getFlashdata('ok')) ?></div>
