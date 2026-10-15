@@ -16,17 +16,9 @@ class PreguntasModel extends Model
         'textoPregunta' => 'required|min_length[3]',
     ];
 
+    // Todas las preguntas de un examen
     public function delExamen(int $idExamen)
     {
         return $this->where('idExamen', $idExamen)->findAll();
-    }
-
-    // El sorteo: N preguntas al azar, sin repetir
-    public function sortear(int $idExamen, int $cantidad)
-    {
-        return $this->where('idExamen', $idExamen)
-                    ->orderBy('id', 'RANDOM')
-                    ->limit($cantidad)
-                    ->findAll();
     }
 }

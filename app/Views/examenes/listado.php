@@ -19,7 +19,7 @@
           <td class="text-center"><?= $ex['id'] ?></td>
           <td class="text-center"><?= esc($ex['nombreExamen']) ?></td>
           <td class="text-center">
-            <a class="btn btn-sm btn-info" href="<?= base_url('examenes/ver/' . $ex['id']) ?>">Ver</a>
+            <a class="btn btn-sm btn-info" href="<?= base_url('examenes/ver/' . $ex['id']) ?>">Preguntas</a>
             <a class="btn btn-sm btn-primary" href="<?= base_url('examenes/editar/' . $ex['id']) ?>">Editar</a>
             <a class="btn btn-sm btn-danger" href="<?= base_url('examenes/borrar/' . $ex['id']) ?>"
                onclick="return confirm('Borrar este examen y sus preguntas?');">Borrar</a>

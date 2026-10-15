@@ -40,8 +40,8 @@
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
 
-<!-- Sorteo de preguntas (XHR con jQuery) -->
-<script src="<?= base_url('assets/js/script.js') ?>"></script>
+<!-- Sorteo de preguntas -->
+<script src="<?= base_url('assets/js/sorteo.js') ?>"></script>
 
 <script>
     $(function () {
