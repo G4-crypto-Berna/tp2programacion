@@ -21,13 +21,32 @@ class Login extends BaseController
         echo view('logueo/login');
         echo view('footer');
     }
+    public function invitado()
+    {
+        $datosUsuario = $this->usuarios->buscarPorUsuario('invitado');
+
+        if ($datosUsuario == null) {
+            $this->usuarios->save([
+                'usuario'  => 'invitado',
+                'password' => password_hash(bin2hex(random_bytes(8)), PASSWORD_DEFAULT),
+            ]);
+            $datosUsuario = $this->usuarios->buscarPorUsuario('invitado');
+        }
+
+        session()->set([
+            'id'      => $datosUsuario['id'],
+            'usuario' => $datosUsuario['usuario'],
+        ]);
+
+        return redirect()->to(base_url('examenes'));
+    }
 
     public function validacion()
     {
         $usuario  = strtolower(trim($this->request->getPost('usuario')));
         $password = $this->request->getPost('password');
 
-        $datosUsuario = $this->usuarios->where('usuario', $usuario)->first();
+        $datosUsuario = $this->usuarios->buscarPorUsuario($usuario);
 
         if ($datosUsuario != null && password_verify($password, $datosUsuario['password'])) {
             session()->set([
@@ -70,7 +89,7 @@ class Login extends BaseController
         if ($password != $repetir) {
             return redirect()->to(base_url('registro'))->with('error', 'Las contraseñas no coinciden.');
         }
-        if ($this->usuarios->where('usuario', $usuario)->first()) {
+        if ($this->usuarios->buscarPorUsuario($usuario)) {
             return redirect()->to(base_url('registro'))->with('error', 'Ese usuario ya existe.');
         }
 

@@ -21,7 +21,8 @@
 
           <div class="text-center text-lg-left mt-4 pt-2">
             <button type="submit" class="btn btn-primary btn-lg px-5">Ingresar</button>
-            <p class="small font-weight-bold mt-2 pt-1 mb-0">¿No tenés cuenta?
+            <a href="<?= base_url('login/invitado') ?>" class="btn btn-outline-secondary btn-lg px-4">Entrar como invitado</a>
+            <p class="small font-weight-bold mt-2 pt-1 mb-0">No tenés cuenta?
               <a href="<?= base_url('registro') ?>" class="text-danger">Registrate</a>
             </p>
           </div>
