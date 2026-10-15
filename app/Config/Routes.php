@@ -23,3 +23,4 @@ $routes->get('/examenes/ver/(:num)', 'Examenes::ver/$1');
 $routes->post('/preguntas/insertar/(:num)', 'Preguntas::insertar/$1');
 $routes->post('/preguntas/borrar/(:num)', 'Preguntas::borrar/$1');
 $routes->post('/preguntas/sortear/(:num)', 'Preguntas::sortear/$1');
+$routes->post('/preguntas/reiniciar/(:num)', 'Preguntas::reiniciar/$1');

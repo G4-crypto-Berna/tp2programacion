@@ -40,6 +40,9 @@
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
 
+<!-- Sorteo de preguntas (XHR con jQuery) -->
+<script src="<?= base_url('assets/js/script.js') ?>"></script>
+
 <script>
     $(function () {
         $('#tablaExamenes').DataTable({
@@ -47,38 +50,10 @@
             columnDefs: [{ orderable: false, targets: -1 }]
         });
 
-        $('#formSorteo').on('submit', function (e) {
-            e.preventDefault();
-            const $form = $(this);
 
-            $.ajax({
-                url: $form.attr('action'),
-                method: 'POST',
-                data: $form.serialize(),
-                dataType: 'json',
-                success: function (resp) {
-                    if (resp.token) {
-                        $('input[name="<?= csrf_token() ?>"]').val(resp.token);
-                    }
-
-                    const $lista = $('#resultadoSorteo').empty();
-
-                    if (!resp.ok) {
-                        $('#msgSorteo').text(resp.mensaje).css('color', 'red');
-                        return;
-                    }
-
-                    $('#msgSorteo').text('Preguntas sorteadas:').css('color', 'green');
-                    resp.preguntas.forEach(function (texto) {
-                        $lista.append($('<li>').text(texto));
-                    });
-                },
-                error: function () {
-                    $('#msgSorteo').text('Error de comunicación con el servidor.').css('color', 'red');
-                }
-            });
-        });
     });
 </script>
+</body>
+</html>
 </body>
 </html>

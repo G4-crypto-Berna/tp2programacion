@@ -23,6 +23,19 @@ class Preguntas extends BaseController
         return $this->examenes->where('id', $idExamen)->where('usuario', $this->sesion->get('id'))->first();
     }
 
+    // Preguntas del examen que todavía no salieron en ningún sorteo
+    private function disponibles($idExamen)
+    {
+        $yaSalieron = $this->sesion->get('sorteadas_' . $idExamen) ?? [];
+
+        $consulta = $this->preguntas->where('idExamen', $idExamen);
+        if (!empty($yaSalieron)) {
+            $consulta->whereNotIn('id', $yaSalieron);
+        }
+
+        return $consulta;
+    }
+
     public function insertar($idExamen)
     {
         if (!$this->sesion->get('id')) {
@@ -75,8 +88,8 @@ class Preguntas extends BaseController
                 ->setJSON(['ok' => false, 'mensaje' => 'Examen no válido.']);
         }
 
-        $cantidad = (int) $this->request->getPost('cantidad');
-        $total    = $this->preguntas->where('idExamen', $idExamen)->countAllResults();
+        $cantidad  = (int) $this->request->getPost('cantidad');
+        $restantes = $this->disponibles($idExamen)->countAllResults();
 
         if ($cantidad < 1) {
             return $this->response->setJSON([
@@ -84,25 +97,60 @@ class Preguntas extends BaseController
             ]);
         }
 
-        if ($cantidad > $total) {
+        if ($restantes == 0) {
             return $this->response->setJSON([
-                'ok' => false,
-                'mensaje' => "El examen tiene solo $total pregunta(s). Elegí un número menor o igual.",
-                'token' => csrf_hash(),
+                'ok'        => false,
+                'mensaje'   => 'Ya salieron todas las preguntas. Reiniciá el sorteo para volver a empezar.',
+                'restantes' => 0,
+                'token'     => csrf_hash(),
             ]);
         }
 
-        // Cada fila aparece una sola vez, por lo tanto no se repiten preguntas
-        $sorteadas = $this->preguntas
-            ->where('idExamen', $idExamen)
+        if ($cantidad > $restantes) {
+            return $this->response->setJSON([
+                'ok'        => false,
+                'mensaje'   => "Quedan solo $restantes pregunta(s) sin sortear. Elegí un número menor o igual.",
+                'restantes' => $restantes,
+                'token'     => csrf_hash(),
+            ]);
+        }
+
+        $sorteadas = $this->disponibles($idExamen)
             ->orderBy('id', 'RANDOM')
             ->limit($cantidad)
             ->findAll();
 
+        // Guarda en la sesión los ids que acaban de salir
+        $clave      = 'sorteadas_' . $idExamen;
+        $yaSalieron = $this->sesion->get($clave) ?? [];
+        $this->sesion->set($clave, array_merge($yaSalieron, array_column($sorteadas, 'id')));
+
         return $this->response->setJSON([
             'ok'        => true,
             'preguntas' => array_column($sorteadas, 'textoPregunta'),
+            'restantes' => $restantes - count($sorteadas),
             'token'     => csrf_hash(),
+        ]);
+    }
+
+    public function reiniciar($idExamen)
+    {
+        if (!$this->sesion->get('id')) {
+            return $this->response->setStatusCode(401)
+                ->setJSON(['ok' => false, 'mensaje' => 'Sesión vencida.']);
+        }
+
+        if (!$this->esMio($idExamen)) {
+            return $this->response->setStatusCode(403)
+                ->setJSON(['ok' => false, 'mensaje' => 'Examen no válido.']);
+        }
+
+        $this->sesion->remove('sorteadas_' . $idExamen);
+
+        return $this->response->setJSON([
+            'ok'      => true,
+            'mensaje' => 'Sorteo reiniciado.',
+            'token'   => csrf_hash(),
         ]);
     }
 }

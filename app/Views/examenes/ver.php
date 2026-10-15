@@ -13,7 +13,9 @@
     <form id="formSorteo" action="<?= base_url('preguntas/sortear/' . $examen['id']) ?>" method="post" class="d-flex gap-2">
       <?= csrf_field() ?>
       <input type="number" name="cantidad" id="cantidad" class="form-control w-auto" min="1" value="1" required>
-      <button class="btn btn-success">Sortear</button>
+        <button class="btn btn-success">Sortear</button>
+        <button type="button" id="btnReiniciar" class="btn btn-outline-secondary"
+        data-url="<?= base_url('preguntas/reiniciar/' . $examen['id']) ?>">Reiniciar sorteo</button>
     </form>
     <p id="msgSorteo" class="mt-2 mb-0"></p>
     <ol id="resultadoSorteo" class="mt-2"></ol>
