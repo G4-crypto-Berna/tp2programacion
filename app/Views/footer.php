@@ -1,6 +1,6 @@
 <?php if (session()->get('id')): ?>
-            </div><!-- /container-fluid -->
-        </div><!-- /content -->
+            </div>
+        </div>
 
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -9,17 +9,16 @@
                 </div>
             </div>
         </footer>
-    </div><!-- /content-wrapper -->
-</div><!-- /wrapper -->
+    </div>
+</div>
 
 <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
 
-<!-- Modal cerrar sesión -->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">¿Salir del sistema?</h5>
+                <h5 class="modal-title">Salir del sistema?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -32,9 +31,22 @@
         </div>
     </div>
 </div>
+<?php endif; ?>
+
+<script src="<?= base_url('vendor/js/jquery.min.js') ?>"></script>
+<script src="<?= base_url('vendor/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="<?= base_url('vendor/js/jquery.easing.min.js') ?>"></script>
+<script src="<?= base_url('vendor/js/sb-admin-2.min.js') ?>"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
     $(function () {
+        $('#tablaExamenes').DataTable({
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json' },
+            columnDefs: [{ orderable: false, targets: -1 }]
+        });
+
         $('#formSorteo').on('submit', function (e) {
             e.preventDefault();
             const $form = $(this);
@@ -45,7 +57,6 @@
                 data: $form.serialize(),
                 dataType: 'json',
                 success: function (resp) {
-                    // actualiza el token CSRF en todos los formularios de la página
                     if (resp.token) {
                         $('input[name="<?= csrf_token() ?>"]').val(resp.token);
                     }
@@ -69,11 +80,5 @@
         });
     });
 </script>
-<?php endif; ?>
-
-<script src="<?= base_url('vendor/js/jquery.min.js') ?>"></script>
-<script src="<?= base_url('vendor/js/bootstrap.bundle.min.js') ?>"></script>
-<script src="<?= base_url('vendor/js/jquery.easing.min.js') ?>"></script>
-<script src="<?= base_url('vendor/js/sb-admin-2.min.js') ?>"></script>
 </body>
 </html>
