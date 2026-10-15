@@ -9,7 +9,7 @@
     <link href="<?= base_url('vendor/css/fontawesome-free/css/all.min.css') ?>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <link href="<?= base_url('vendor/css/sb-admin-2.min.css') ?>" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('vendor/css/logincss/login.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/login.css') ?>">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
 </head>
 <body id="page-top">
