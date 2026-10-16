@@ -1,60 +1,110 @@
-# CodeIgniter 4 Framework
+# Trabajo Práctico N° 2 de Programación III
 
-## What is CodeIgniter?
+Trabajo hecho por Atencio Kevin y Bernachea Gabriela, de tercer año de Analisis y desarrollo de Software
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (XAMPP/LAMPP)
 
-This repository holds the distributable version of the framework.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## Requisitos
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- XAMPP (Windows) o LAMPP (Linux) con Apache y MySQL/MariaDB
+- PHP 8.1 o superior
+- [Composer](https://getcomposer.org)
+- Git
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+## Instalación
 
-## Important Change with index.php
+### 1. Clonar el repositorio dentro de `htdocs`
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+**Windows**
+```
+cd C:\xampp\htdocs
+git clone https://github.com/G4-crypto-Berna/tp2programacion tp2programacion
+cd tp2programacion
+```
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+**Linux**
+```
+cd /opt/lampp/htdocs
+git clone https://github.com/G4-crypto-Berna/tp2programacion tp2programacion
+cd tp2programacion
+```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+### 2. Instalar las dependencias
 
-## Repository Management
+```
+composer install
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+### 3. Configurar la aplicación
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+Este proyecto **no usa el archivo `.env`**: la configuración se hace directamente en dos archivos de `app/Config/`.
 
-## Contributing
+**`app/Config/App.php`**: ajustar la URL base según cómo se acceda al proyecto:
 
-We welcome contributions from the community.
+```php
+public string $baseURL = 'http://localhost/tp2programacion/public/';
+```
 
-Please read the [*Contributing to CodeIgniter*](https://github.com/codeigniter4/CodeIgniter4/blob/develop/CONTRIBUTING.md) section in the development repository.
+Si se usa el servidor de desarrollo de CodeIgniter (`php spark serve`), la URL base es `http://localhost:8080/`.
 
-## Server Requirements
+**`app/Config/Database.php`**: en el arreglo `$default`, completar los datos de conexión:
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+```php
+'hostname' => 'localhost',
+'username' => 'root',
+'password' => '',          // vacío por defecto en XAMPP/LAMPP
+'database' => 'preguntas',
+'DBDriver' => 'MySQLi',
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+### 4. Dar permisos a la carpeta `writable/` (solo Linux)
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Apache necesita poder escribir en `writable/` (caché, logs y sesiones):
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+```
+mkdir -p writable/cache writable/logs writable/session writable/uploads
+sudo chmod -R 775 writable
+sudo chown -R $USER:daemon writable
+```
+
+### 5. Crear la base de datos con el archivo que se encuentra en app/database/preguntas.sql
+
+Iniciar MySQL (desde el Panel de Control de XAMPP, o en Linux con `sudo /opt/lampp/lampp start`) e importar el esquema:
+
+- **Vía phpMyAdmin:** importar el script `database/preguntas.sql`.
+- **Vía consola (Windows):**
+```
+  C:\xampp\mysql\bin\mysql -u root -e "source C:/xampp/htdocs/tp2programacion/database/preguntas.sql"
+```
+- **Vía consola (Linux):**
+```
+  /opt/lampp/bin/mysql -u root -e "source /opt/lampp/htdocs/tp2programacion/database/preguntas.sql"
+```
+
+El script crea la base `preguntas` y todas sus tablas si no existen.
+
+### 6. Levantar la aplicación
+
+Con Apache iniciado, entrar a:
+
+```
+http://localhost/tp2programacion/public/
+```
+
+Alternativa sin Apache, usando el servidor de desarrollo de CodeIgniter:
+
+```
+php spark serve
+```
+
+(en ese caso, la URL base en `App.php` debe ser `http://localhost:8080/`).
+
+Todo lo que se puede hacer con este sistema web de gestion
+
+- Registro de usuarios con opcion a usar el sitema en modo invitado sin loguearse
+- creacion de axamenes guardados por id
+- creacion de preguntas sin maximo
+- Sorteo de preguntas al azar, con la cantidad definida por el usuario y sin repetir preguntas entre sorteos (con opción de reiniciar el sorteo).
+
+
